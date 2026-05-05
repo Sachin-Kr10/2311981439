@@ -381,3 +381,50 @@ function getWeight(type) {
 
 In this stage, we implemented priority inbox using weight + recency and returned top 10 notifications efficiently.
 
+## Stage 7 — Frontend (React Application)
+
+In this stage, we built a simple frontend using React to display notifications and priority inbox.
+
+
+
+### Features Implemented
+
+* Display all notifications
+* Display priority inbox (top 10)
+* Real-time updates using **Socket.IO**
+* Clean UI using basic CSS
+
+
+### API Integration
+
+* GET `/notifications` → fetch all notifications
+* GET `/notifications/priority` → fetch top 10 notifications
+
+### Real-Time Flow
+
+* User connects via socket
+* Server sends new notification
+* UI updates instantly
+
+### Components
+
+* `NotificationList` → shows all notifications
+* `PriorityList` → shows top priority notifications
+
+
+### Performance Improvements
+
+* Fetch data once on load
+* Avoid repeated API calls
+* Use socket for updates
+
+
+### Tradeoffs
+
+* Depends on backend availability
+* Socket connection handling required
+
+
+### Summary
+
+In this stage, we created a React frontend that connects with backend APIs and displays notifications with real-time updates and priority inbox.
