@@ -10,6 +10,9 @@ exports.create = async (data) => {
 exports.getAll = (userId, query) => {
   return repo.getAll(userId, query)
 }
+exports.getUnread = (userId, query) => {
+  return repo.getUnread(userId, query)
+}
 
 exports.markRead = (id) => repo.markRead(id)
 

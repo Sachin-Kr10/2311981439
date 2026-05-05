@@ -129,3 +129,72 @@ DELETE FROM notifications WHERE id = ?;
 
 In this stage, we added database, schema, queries, and handled scaling problems.
 
+
+## Stage 3 — Query Optimization (Code + Changes)
+
+### Changes Made
+
+1. Optimized query (avoid `SELECT *`, added limit)
+2. Added composite index
+3. Added pagination in API
+4. Added unread-only filter optimization
+
+
+### Updated SQL Query
+
+SELECT id, title, message, created_at
+FROM notifications
+WHERE student_id = ? AND is_read = FALSE
+ORDER BY created_at DESC
+LIMIT ? OFFSET ?;
+
+### Index Added
+
+CREATE INDEX idx_student_read_created
+ON notifications(student_id, is_read, created_at DESC);
+
+
+### Repository Changes (`notification.repository.js`)
+
+exports.getUnread = async (userId, { limit = 20, page = 1 }) => {
+  const offset = (page - 1) * limit
+
+  const [rows] = await db.execute(
+    `SELECT id, title, message, created_at
+     FROM notifications
+     WHERE user_id = ? AND is_read = FALSE
+     ORDER BY created_at DESC
+     LIMIT ? OFFSET ?`,
+    [userId, +limit, +offset]
+  )
+
+  return rows
+}
+
+### Controller Changes (`notification.controller.js`)
+
+exports.getUnread = async (req, res) => {
+  const data = await service.getUnread(req.user.id, req.query)
+  res.json(data)
+}
+
+
+### Route Added (`notification.routes.js`)
+
+router.get('/unread', auth, controller.getUnread)
+
+
+### Placement Query
+
+SELECT DISTINCT student_id
+FROM notifications
+WHERE notification_type = 'Placement'
+AND created_at >= NOW() - INTERVAL 7 DAY;
+
+### Summary
+
+* Improved query performance using index
+* Reduced data fetch size
+* Added pagination
+* Added unread API for better efficiency
+

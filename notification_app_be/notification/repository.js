@@ -19,6 +19,21 @@ exports.getAll = async (userId, { limit = 10, page = 1 }) => {
   return rows
 }
 
+exports.getUnread = async (userId, { limit = 20, page = 1 }) => {
+  const offset = (page - 1) * limit
+
+  const [rows] = await db.execute(
+    `SELECT id, title, message, created_at
+     FROM notifications
+     WHERE user_id = ? AND is_read = FALSE
+     ORDER BY created_at DESC
+     LIMIT ? OFFSET ?`,
+    [userId, +limit, +offset]
+  )
+
+  return rows
+}
+
 exports.markRead = (id) =>
   db.execute('UPDATE notifications SET is_read = TRUE WHERE id = ?', [id])
 

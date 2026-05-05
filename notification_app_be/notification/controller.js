@@ -24,3 +24,8 @@ exports.remove = async (req, res) => {
   await service.remove(req.params.id)
   res.json({ message: 'deleted' })
 }
+
+exports.getUnread = async (req, res) => {
+  const data = await service.getUnread(req.user.id, req.query)
+  res.json(data)
+}
