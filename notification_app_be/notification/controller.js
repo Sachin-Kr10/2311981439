@@ -1,4 +1,4 @@
-const service = require('./notification.service')
+const service = require('./service')
 
 exports.create = async (req, res) => {
   const data = await service.create(req.body)
@@ -36,4 +36,9 @@ exports.notifyAll = async (req, res) => {
   await service.notifyAll(users, req.body)
 
   res.json({ message: 'Notifications queued' })
+}
+
+exports.getPriority = async (req, res) => {
+  const data = await service.getPriority(req.user.id)
+  res.json(data)
 }

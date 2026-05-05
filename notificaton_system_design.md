@@ -273,7 +273,7 @@ Fetch only needed columns
 In this stage, we improved performance using pagination, indexing, optimized queries.
 
 
-## Stage 5 — Bulk Notification (Notify All)
+## Stage 5 — Notification (Notify All)
 
 In this stage, we handled the case where HR sends notification to all students (50,000 users).
 
@@ -325,3 +325,59 @@ In this stage, we handled the case where HR sends notification to all students (
 ### Summary
 
 In this stage, we improved bulk notification handling using queue and batch processing to avoid system overload.
+
+
+
+## Stage 6 — Priority Inbox (Top 10 Notifications)
+
+In this stage, we implemented a Priority Inbox that shows top 10 most important unread notifications.
+
+
+### Approach
+
+* Assign priority weight:
+
+  * Placement = 3
+  * Result = 2
+  * Event = 1
+* Combine with recency (latest first)
+* Maintain only top 10 notifications
+
+### Code (JavaScript)
+
+function getWeight(type) {
+  if (type === 'Placement') return 3
+  if (type === 'Result') return 2
+  return 1
+}
+
+
+
+### How it works
+
+* Filters unread notifications
+* Calculates score using weight + time
+* Sorts by score
+* Returns top 10
+
+
+### Maintaining Top 10 Efficiently
+
+* Keep only top 10 in memory
+* On new notification:
+
+  * Add new item
+  * Re-sort
+  * Remove lowest
+
+
+### Cons
+
+* Sorting cost for large data
+* Needs memory handling
+
+
+### Summary
+
+In this stage, we implemented priority inbox using weight + recency and returned top 10 notifications efficiently.
+

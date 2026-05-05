@@ -1,6 +1,7 @@
 const repo = require('./repository')
 const { sendNotification } = require('../socket/socket')
 const {addJob} = require("../utils/queue")
+const { getTopNotifications } = require('./priority')
 
 exports.create = async (data) => {
   const notification = await repo.create(data)
@@ -34,4 +35,10 @@ exports.notifyAll = async (users, data) => {
       sendNotification(user.id, notification)
     })
   })
+}
+
+
+exports.getPriority = async (userId) => {
+  const notifications = await repo.getAll(userId, { limit: 100, page: 1 })
+  return getTopNotifications(notifications, 10)
 }
