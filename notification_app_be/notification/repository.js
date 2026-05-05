@@ -8,11 +8,15 @@ exports.create = async (data) => {
   return { id: result.insertId, ...data }
 }
 
-exports.getAll = async (userId, { limit = 10, page = 1 }) => {
+exports.getAll = async (userId, { limit = 20, page = 1 }) => {
   const offset = (page - 1) * limit
 
   const [rows] = await db.execute(
-    'SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+    `SELECT id, title, message, created_at
+     FROM notifications
+     WHERE user_id = ?
+     ORDER BY created_at DESC
+     LIMIT ? OFFSET ?`,
     [userId, +limit, +offset]
   )
 

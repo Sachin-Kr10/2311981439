@@ -198,3 +198,74 @@ AND created_at >= NOW() - INTERVAL 7 DAY;
 * Added pagination
 * Added unread API for better efficiency
 
+## Stage 4 — Performance & Scaling
+
+In this stage, we improved performance .
+
+
+### Problem
+
+* Notifications fetched on every page load
+* Database overloaded
+* Slow response time
+
+### Solutions Implemented
+
+## 1. Pagination
+
+Fetch only 10–20 notifications per request
+
+reduces DB load
+
+#### 2. Optimized Query + Index
+
+* Used index on (user_id, is_read, created_at)
+* Faster filtering and sorting
+
+
+#### 3. Real-time using **Socket.IO**
+
+* Send new notifications instantly
+* Avoid repeated API calls
+
+ reduces unnecessary requests
+
+---
+
+#### 4. Avoid Frequent API Calls
+
+* Do not call API on every page reload
+* Fetch once and update using socket
+
+---
+
+#### 5. Mark-all-read Optimization
+
+* Use `last_read_at` instead of updating all rows
+
+ avoids heavy DB updates
+
+---
+
+#### 6. Select Required Fields Only
+
+Avoid `SELECT *`
+Fetch only needed columns
+
+### Tradeoffs
+
+* Slight delay if socket fails
+* More logic on frontend
+* Requires connection handling
+
+---
+
+### Final Approach
+
+* Initial load → API
+* Updates → Socket
+* DB queries → optimized with index + limit
+
+### Summary
+
+In this stage, we improved performance using pagination, indexing, optimized queries.

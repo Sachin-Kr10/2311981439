@@ -16,6 +16,7 @@ exports.getUnread = (userId, query) => {
 
 exports.markRead = (id) => repo.markRead(id)
 
-exports.markAllRead = (userId) => repo.markAllRead(userId)
+exports.markAllRead = (userId) =>
+  db.execute('UPDATE users SET last_read_at = NOW() WHERE id = ?', [userId])
 
 exports.remove = (id) => repo.remove(id)
