@@ -8,7 +8,9 @@ exports.create = async (data) => {
   return { id: result.insertId, ...data }
 }
 
-exports.getAll = async (userId, { limit = 20, page = 1 }) => {
+exports.getAll = async (userId, query = {}) => {
+  const limit = parseInt(query.limit) || 20
+  const page = parseInt(query.page) || 1
   const offset = (page - 1) * limit
 
   const [rows] = await db.execute(
@@ -16,14 +18,16 @@ exports.getAll = async (userId, { limit = 20, page = 1 }) => {
      FROM notifications
      WHERE user_id = ?
      ORDER BY created_at DESC
-     LIMIT ? OFFSET ?`,
-    [userId, +limit, +offset]
+     LIMIT ${limit} OFFSET ${offset}`,   // ✅ FIXED
+    [Number(userId)]
   )
 
   return rows
 }
 
-exports.getUnread = async (userId, { limit = 20, page = 1 }) => {
+exports.getUnread = async (userId, query = {}) => {
+  const limit = parseInt(query.limit) || 20
+  const page = parseInt(query.page) || 1
   const offset = (page - 1) * limit
 
   const [rows] = await db.execute(
@@ -31,8 +35,8 @@ exports.getUnread = async (userId, { limit = 20, page = 1 }) => {
      FROM notifications
      WHERE user_id = ? AND is_read = FALSE
      ORDER BY created_at DESC
-     LIMIT ? OFFSET ?`,
-    [userId, +limit, +offset]
+     LIMIT ${limit} OFFSET ${offset}`,  
+    [Number(userId)]
   )
 
   return rows
