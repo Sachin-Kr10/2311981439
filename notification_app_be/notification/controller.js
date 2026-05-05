@@ -29,3 +29,11 @@ exports.getUnread = async (req, res) => {
   const data = await service.getUnread(req.user.id, req.query)
   res.json(data)
 }
+
+exports.notifyAll = async (req, res) => {
+  const users = req.body.users
+
+  await service.notifyAll(users, req.body)
+
+  res.json({ message: 'Notifications queued' })
+}

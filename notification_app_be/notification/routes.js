@@ -10,5 +10,6 @@ router.patch('/read-all', auth, controller.markAllRead)
 router.delete('/:id', auth, controller.remove)
 
 router.get('/unread', auth, controller.getUnread)
+router.post('/notify-all', controller.notifyAll)
 
 module.exports = router

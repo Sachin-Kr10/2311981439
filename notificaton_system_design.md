@@ -198,6 +198,8 @@ AND created_at >= NOW() - INTERVAL 7 DAY;
 * Added pagination
 * Added unread API for better efficiency
 
+
+
 ## Stage 4 — Performance & Scaling
 
 In this stage, we improved performance .
@@ -269,3 +271,57 @@ Fetch only needed columns
 ### Summary
 
 In this stage, we improved performance using pagination, indexing, optimized queries.
+
+
+## Stage 5 — Bulk Notification (Notify All)
+
+In this stage, we handled the case where HR sends notification to all students (50,000 users).
+
+
+### Problem
+
+* Sending notifications to all users at once
+* Can overload server and database
+* Email + in-app both required
+
+
+### Solution
+
+#### 1. Use Queue System
+
+* Instead of sending all at once
+* Push jobs into queue
+* Process one by one (async)
+
+
+#### 2. Worker Processing
+
+* Worker reads queue
+* Sends:
+
+  * Email
+  * In-app notification
+
+#### 3. Batch Processing
+
+* Send notifications in batches (e.g., 100–500 users at a time)
+* Avoid server crash
+
+
+### Flow
+
+1. HR clicks "Notify All"
+2. Backend adds jobs to queue
+3. Worker processes jobs
+4. Notifications delivered
+
+### Tradeoffs
+
+* Slight delay in delivery
+* More system complexity
+* Requires worker setup
+
+
+### Summary
+
+In this stage, we improved bulk notification handling using queue and batch processing to avoid system overload.
