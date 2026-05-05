@@ -1,5 +1,5 @@
-const repo = require('./notification.repository')
-const { sendNotification } = require('../../sockets/socket')
+const repo = require('./repository')
+const { sendNotification } = require('../socket/socket')
 
 exports.create = async (data) => {
   const notification = await repo.create(data)

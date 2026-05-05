@@ -57,14 +57,75 @@ DELETE /notifications/:id
 * isRead
 * createdAt
 
----
-
 ### Real-Time
 
 We used **Socket.IO** to send notifications instantly to the user when they are online.
 
----
 
 ### Summary
 
 In this stage, we created basic REST APIs and structure for notification system and added real-time support using sockets.
+
+
+## Stage 2 — Database & Storage
+
+In this stage, we stored the notification data using **MySQL** because it is reliable and good for structured data.
+
+
+### Database Schema
+
+sql
+CREATE TABLE notifications (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  title VARCHAR(255),
+  message TEXT,
+  is_read BOOLEAN DEFAULT FALSE,
+  metadata JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+### Problems with Large Data
+
+* Data becomes very large
+* Queries become slow
+* Too many updates (mark all read)
+
+### Solutions
+
+* Use indexes (user_id, created_at)
+* Use pagination
+* Use caching like Redis
+* Use partitioning
+
+### SQL Queries
+
+**Create**
+
+sql
+INSERT INTO notifications (user_id, title, message)
+VALUES (?, ?, ?);
+
+**Get**
+
+sql
+SELECT * FROM notifications
+WHERE user_id = ?
+ORDER BY created_at DESC
+LIMIT ? OFFSET ?;
+
+**Mark Read**
+
+sql
+UPDATE notifications SET is_read = TRUE WHERE id = ?;
+
+**Delete**
+
+sql
+DELETE FROM notifications WHERE id = ?;
+
+### Summary
+
+In this stage, we added database, schema, queries, and handled scaling problems.
+

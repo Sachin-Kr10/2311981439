@@ -2,10 +2,9 @@ const db = require('../../config/db')
 
 exports.create = async (data) => {
   const [result] = await db.execute(
-    'INSERT INTO notifications (user_id, title, message, type, metadata) VALUES (?, ?, ?, ?, ?)',
-    [data.userId, data.title, data.message, data.type, JSON.stringify(data.metadata)]
+    'INSERT INTO notifications (user_id, title, message, metadata) VALUES (?, ?, ?, ?)',
+    [data.userId, data.title, data.message, JSON.stringify(data.metadata || {})]
   )
-
   return { id: result.insertId, ...data }
 }
 
