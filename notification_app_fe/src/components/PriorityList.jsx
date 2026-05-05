@@ -1,7 +1,8 @@
 function PriorityList({ data }) {
   return (
     <div>
-      <h2>Priority Inbox (Top 10)</h2>
+      <h2>Priority Inbox</h2>
+
       {data.map(n => (
         <div key={n.id} className="card priority">
           <h4>{n.title}</h4>

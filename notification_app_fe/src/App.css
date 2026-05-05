@@ -18,3 +18,7 @@ body {
 .priority {
   border-left: 5px solid red;
 }
+
+button {
+  margin-right: 5px;
+}
