@@ -1,0 +1,18 @@
+const repo = require('./notification.repository')
+const { sendNotification } = require('../../sockets/socket')
+
+exports.create = async (data) => {
+  const notification = await repo.create(data)
+  sendNotification(data.userId, notification)
+  return notification
+}
+
+exports.getAll = (userId, query) => {
+  return repo.getAll(userId, query)
+}
+
+exports.markRead = (id) => repo.markRead(id)
+
+exports.markAllRead = (userId) => repo.markAllRead(userId)
+
+exports.remove = (id) => repo.remove(id)
